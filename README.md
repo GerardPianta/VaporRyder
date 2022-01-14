@@ -16,7 +16,7 @@ S or down arrow: Break
 
 A and D or Left and Right arrows: rotate counter clockwise and clockwise
 
-Space: Booster
+Space: Booster Pack
 
 F2: Exit to main menu
 
@@ -33,5 +33,5 @@ Left Trigger: Brake
 
 Right Trigger: Accelerate
 
-A: Menu Select/Use Booster Pack
+A: Menu Select/Booster Pack
 

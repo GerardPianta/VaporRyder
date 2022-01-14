@@ -7,7 +7,9 @@ Vapor Ryder can be played at http://gerard3d.com/vaporRyder/vaporRyder.html
  
 # Controls:
 W or up arrow: Forward thrust
+
 S or down arrow: Break
+
 A and D or Left and Right arrows: rotate counter clockwise and clockwise
 Space: Booster
 F2: Exit to main menu

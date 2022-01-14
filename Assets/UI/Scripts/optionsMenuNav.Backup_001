@@ -1,0 +1,190 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
+public class optionsMenuNav : MonoBehaviour
+{
+	//public variables
+	public int menuIndex;
+	public GameObject[] menuItems;
+	public GameObject menuOpen;
+	public GameObject menuClose;
+	public int menuLength;
+	public Color buttonNormal;
+	public Color buttonSelect;
+	public Color buttonPress;
+	public int volumeIndex;
+
+	public float buttonPressDelay = .2f;
+
+	// private variables
+	//menu indexes
+	private int index_optionsResolution = 0;
+	private int index_optionsVolume = 1;
+	private int index_optionsReturn = 2;
+
+	//resolution indexes
+	private const int resLow = 0;
+	private const int resMed = 1;
+	private const int resHigh = 2;
+
+	//volume indexes
+	private int index_volOff = 0;
+	private int index_volMax = 4;
+
+	//menu text
+	private string text_ResLow = "Resolution Level: 240x135";
+	private string text_ResMed = "Resolution Level: 360x202";
+	private string text_ResHigh = "Resolution Level: 480x270";
+
+	//Notes:
+	// make variables for menu indexes to improve code clarity
+	// make function to highlight menu option
+	// make function to select
+
+
+	// Use this for initialization
+	void Start ()
+	{
+		
+	}
+
+	void Awake ()
+	{
+		menuLength = (menuItems.Length-1);
+		menuIndex = 0;
+		volumeIndex = 4;
+		//menuItems [menuIndex].GetComponent<Image> ().color = buttonSelect;
+		menuItems [menuIndex].GetComponent<Text> ().color = buttonSelect;
+	}
+	
+	// Update is called once per frame
+	void Update ()
+	{
+		if (Input.GetAxis ("Submit") == 1)
+		{
+			//menuItems [menuIndex].GetComponent<Image> ().color = buttonPress;
+			menuItems [menuIndex].GetComponent<Text> ().color = buttonPress;
+			//button press function with subtle delay
+			StartCoroutine ("buttonPressWaitTest");
+		}
+
+		if (Input.GetKeyDown (KeyCode.DownArrow))
+		{
+			if (menuIndex < menuLength)
+			{
+				//menuItems [menuIndex].GetComponent<Image> ().color = buttonNormal;
+				menuItems [menuIndex].GetComponent<Text> ().color = buttonNormal;
+				menuIndex++;
+				//menuItems [menuIndex].GetComponent<Image> ().color = buttonSelect;
+				menuItems [menuIndex].GetComponent<Text> ().color = buttonSelect;
+				AudioSource audio = GetComponent<AudioSource>();
+				audio.Play();
+
+			}
+			else
+			if (menuIndex >= menuLength)
+			{
+				//menuItems [menuIndex].GetComponent<Image> ().color = buttonNormal;
+				menuItems [menuIndex].GetComponent<Text> ().color = buttonNormal;
+				menuIndex = 0;
+				//menuItems [menuIndex].GetComponent<Image> ().color = buttonSelect;
+				menuItems [menuIndex].GetComponent<Text> ().color = buttonSelect;
+				AudioSource audio = GetComponent<AudioSource>();
+				audio.Play();
+			}
+				
+		}
+
+		if (Input.GetKeyDown (KeyCode.UpArrow))
+		{
+			if (menuIndex <= 0)
+			{
+				//menuItems [menuIndex].GetComponent<Image> ().color = buttonNormal;
+				menuItems [menuIndex].GetComponent<Text> ().color = buttonNormal;
+				menuIndex = menuLength;
+				//menuItems [menuIndex].GetComponent<Image> ().color = buttonSelect;
+				menuItems [menuIndex].GetComponent<Text> ().color = buttonSelect;
+				AudioSource audio = GetComponent<AudioSource>();
+				audio.Play();
+			}
+			else
+			if (menuIndex > 0)
+			{
+				//menuItems [menuIndex].GetComponent<Image> ().color = buttonNormal;
+				menuItems [menuIndex].GetComponent<Text> ().color = buttonNormal;
+				menuIndex = (menuIndex-1);
+				//menuItems [menuIndex].GetComponent<Image> ().color = buttonSelect;
+				menuItems [menuIndex].GetComponent<Text> ().color = buttonSelect;
+				AudioSource audio = GetComponent<AudioSource>();
+				audio.Play();
+			}
+		}
+	}
+
+	IEnumerator buttonPressWaitTest ()
+	{
+		yield return new WaitForSeconds (buttonPressDelay);
+		//menuItems [menuIndex].GetComponent<Image> ().color = buttonSelect;
+		menuItems [menuIndex].GetComponent<Text> ().color = buttonSelect;
+
+		if (menuIndex == index_optionsResolution)
+		{
+			SetResolution ();
+		}
+		else if (menuIndex == index_optionsVolume)
+		{
+			SetVolume ();
+		}
+		else if (menuIndex == index_optionsReturn)
+		{
+			ReturnToMainMenu ();
+		}
+	}
+
+	void SetResolution()
+	{
+		switch (globalOptions.resolutionLevel)
+		{
+		case resLow:
+			menuItems [menuIndex].GetComponent<Text> ().text = text_ResMed;
+			globalOptions.resolutionLevel++;
+			break;
+		case resMed:
+			menuItems [menuIndex].GetComponent<Text> ().text = text_ResHigh;
+			globalOptions.resolutionLevel++;
+			break;
+		case resHigh:
+			menuItems [menuIndex].GetComponent<Text> ().text = text_ResLow;
+			globalOptions.resolutionLevel = resLow;
+			break;
+		}
+	}
+
+	void SetVolume()
+	{
+		if (volumeIndex == 4)
+		{
+			globalOptions.volumeLevel = 0f;
+			menuItems [menuIndex].GetComponent<Text> ().text = "Volume Level: Off";
+			volumeIndex = 0;
+		}
+		else if (volumeIndex < 4)
+		{
+			globalOptions.volumeLevel = (globalOptions.volumeLevel + 0.25f);
+			volumeIndex++;
+			menuItems [menuIndex].GetComponent<Text> ().text = "Volume Level: " + volumeIndex.ToString ();
+		}
+	}
+
+	void ReturnToMainMenu()
+	{
+		menuOpen.SetActive(true);
+		menuItems [menuIndex].GetComponent<Text> ().color = buttonNormal;
+		menuIndex = 0;
+		menuItems [menuIndex].GetComponent<Text> ().color = buttonSelect;
+		menuClose.SetActive(false);
+	}
+}

@@ -1,0 +1,123 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
+public class mainMenuNav : MonoBehaviour
+{
+	public int menuIndex;
+	public GameObject[] menuItems;
+	public GameObject menuOpen;
+	public GameObject menuClose;
+	public int menuLength;
+	public Color buttonNormal;
+	public Color buttonSelect;
+	public Color buttonPress;
+
+	//notes: make variables for menu indexes to improve code clarity
+
+	// Use this for initialization
+	void Start ()
+	{
+		
+	}
+
+	void Awake ()
+	{
+		menuLength = (menuItems.Length-1);
+		menuIndex = 0;
+		//menuItems [menuIndex].GetComponent<Image> ().color = buttonSelect;
+		menuItems [menuIndex].GetComponent<Text> ().color = buttonSelect;
+	}
+	
+	// Update is called once per frame
+	void Update ()
+	{
+		if (Input.GetKeyDown (KeyCode.Return))
+		{
+			//menuItems [menuIndex].GetComponent<Image> ().color = buttonPress;
+			menuItems [menuIndex].GetComponent<Text> ().color = buttonPress;
+			StartCoroutine ("buttonPressWait");
+		}
+
+		if (Input.GetKeyDown (KeyCode.DownArrow))
+		{
+			if (menuIndex < menuLength)
+			{
+				//menuItems [menuIndex].GetComponent<Image> ().color = buttonNormal;
+				menuItems [menuIndex].GetComponent<Text> ().color = buttonNormal;
+				menuIndex++;
+				//menuItems [menuIndex].GetComponent<Image> ().color = buttonSelect;
+				menuItems [menuIndex].GetComponent<Text> ().color = buttonSelect;
+				AudioSource audio = GetComponent<AudioSource>();
+				audio.Play();
+
+			}
+			else
+			if (menuIndex >= menuLength)
+			{
+				//menuItems [menuIndex].GetComponent<Image> ().color = buttonNormal;
+				menuItems [menuIndex].GetComponent<Text> ().color = buttonNormal;
+				menuIndex = 0;
+				//menuItems [menuIndex].GetComponent<Image> ().color = buttonSelect;
+				menuItems [menuIndex].GetComponent<Text> ().color = buttonSelect;
+				AudioSource audio = GetComponent<AudioSource>();
+				audio.Play();
+			}	
+		}
+
+		if (Input.GetKeyDown (KeyCode.UpArrow))
+		{
+			if (menuIndex <= 0)
+			{
+				//menuItems [menuIndex].GetComponent<Image> ().color = buttonNormal;
+				menuItems [menuIndex].GetComponent<Text> ().color = buttonNormal;
+				menuIndex = menuLength;
+				//menuItems [menuIndex].GetComponent<Image> ().color = buttonSelect;
+				menuItems [menuIndex].GetComponent<Text> ().color = buttonSelect;
+				AudioSource audio = GetComponent<AudioSource>();
+				audio.Play();
+			}
+			else
+			if (menuIndex > 0)
+			{
+				//menuItems [menuIndex].GetComponent<Image> ().color = buttonNormal;
+				menuItems [menuIndex].GetComponent<Text> ().color = buttonNormal;
+				menuIndex = (menuIndex-1);
+				//menuItems [menuIndex].GetComponent<Image> ().color = buttonSelect;
+				menuItems [menuIndex].GetComponent<Text> ().color = buttonSelect;
+				AudioSource audio = GetComponent<AudioSource>();
+				audio.Play();
+			}
+		}
+	}
+
+	IEnumerator buttonPressWait ()
+	{
+		yield return new WaitForSeconds (.2f);
+		//menuItems [menuIndex].GetComponent<Image> ().color = buttonSelect;
+		menuItems [menuIndex].GetComponent<Text> ().color = buttonSelect;
+
+		if (menuIndex == 0)
+		{
+			SceneManager.LoadScene ("playground");
+		}
+		else
+		if (menuIndex == 1)
+		{
+			menuOpen.SetActive(true);
+			menuItems [menuIndex].GetComponent<Text> ().color = buttonNormal;
+			menuIndex = 0;
+			menuItems [menuIndex].GetComponent<Text> ().color = buttonSelect;
+			menuClose.SetActive(false);
+		}
+		else
+		if (menuIndex == 2)
+		{
+			Application.Quit();
+			Debug.Log ("The user has quit the game!");
+		}
+
+	}
+}

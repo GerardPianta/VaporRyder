@@ -33,5 +33,5 @@ Left Trigger: Brake
 
 Right Trigger: Accelerate
 
-A: Select/Use Booster Pack
+A: Menu Select/Use Booster Pack
 
